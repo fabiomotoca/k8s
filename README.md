@@ -7,6 +7,13 @@ Create and run a nginx pod
 kubectl run nginx --image=nginx
 ```
 
+Show running pods with a specific label
+```bash
+kubectl get pod --selector app=App1
+
+kubectl get pod --selector "app=App1,function=frontend"
+```
+
 Create and run a pod called nginx, and create a service type ClusterIP to expose in tcp/80 port
 ```bash
 kubectl run nginx --image=nginx --port=80 --expose
