@@ -18,6 +18,11 @@ kubectl get pods --selector app=App1
 kubectl get pods --selector "app=App1,function=frontend"
 ```
 
+Watch for pod creation process
+```bash
+kubectl get pods --watch
+```
+
 Create and run a pod called nginx, and create a service type ClusterIP to expose in tcp/80 port
 ```bash
 kubectl run nginx --image=nginx --port=80 --expose
@@ -34,6 +39,31 @@ Generate POD manifest yaml file with `-o`, don't run it `--dry-run=client`, and 
 ```bash
 kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yaml
 ```
+
+## COMMANDS FOR NODES
+
+Show node labels
+```bash
+kubectl get nodes --show-labels
+
+kubectl describe nodes <NODE NAME> | grep -i -A10 labels
+```
+
+Add a label color=blue to a specific node
+```bash
+kubectl label nodes <NODE NAME> color=blue
+```
+
+Add a taint to a node
+```bash
+kubectl taint nodes node1 size=small:NoSchedule
+```
+
+To remove a taint from a node, put the "-" in front of the key/value:taint
+```bash
+kubectl taint nodes node1 size=small:NoSchedule-
+```
+
 
 ## COMMANDS FOR DEPLOYMENTS
 
