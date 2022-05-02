@@ -64,6 +64,7 @@ To remove a taint from a node, put the "-" in front of the key/value:taint
 kubectl taint nodes node1 size=small:NoSchedule-
 ```
 
+:dart: [More taint commands at kubernetes.io](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#taint)
 
 ## COMMANDS FOR DEPLOYMENTS
 
