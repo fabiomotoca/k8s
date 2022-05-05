@@ -23,6 +23,16 @@ Watch for pod creation process
 kubectl get pods --watch
 ```
 
+Watch a POD (live) log as you're in its terminal - For a POD with only 1 container -
+```bash
+kubectl logs -f <POD-NAME>
+```
+
+Watch a POD (live) log as you're in its terminal - For a POD with multiple containers -
+```bash
+kubectl logs -f <POD-NAME> -c <CONTAINER-NAME>
+```
+
 Create and run a pod called nginx, and create a service type ClusterIP to expose in tcp/80 port
 ```bash
 kubectl run nginx --image=nginx --port=80 --expose
@@ -146,3 +156,36 @@ Create a service, but the command bellow won't use the pods labels as selectors
 kubectl create service nodeport nginx --tcp=80:80 --node-port=30080
 ```
 
+# Metrics Server
+
+:rocket: [metrics-server@github](https://github.com/kubernetes-sigs/metrics-server)
+
+:dart: [Linux Watch Command](https://linuxize.com/post/linux-watch-command/)
+
+Get nodes CPU and memory utilization
+```bash
+kubectl top node
+
+watch "kubectl top node"
+```
+
+Get PODs CPU and memory utilization
+```bash
+kubectl top pods
+
+watch "kubectl top pods"
+```
+
+# OTHERS
+
+List events and sources (Good to see which schedule provisioned a POD for example)
+```bash
+kubectl get events
+```
+
+View scheduler logs
+```bash
+kubectl logs <POD-NAME>
+
+kubectl logs <SCHEDULER-NAME> --n kube-system
+```
