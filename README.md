@@ -38,14 +38,14 @@ Create and run a pod called nginx, and create a service type ClusterIP to expose
 kubectl run nginx --image=nginx --port=80 --expose
 ```
 
-Create and run a redis pod, using a redis alpine image, include a label `tier: db`. Also, expose the pod using a ClusterIP kind of service (default).
+Create and run a Redis pod, using a Redis Alpine image, include a label `tier: db`. Also, expose the pod using a ClusterIP kind of service (default).
 ```bash
 kubectl run redis --image=redis:alpine --labels=tier=db
 
 kubectl expose pod redis --name redis-service --port 6379 --target-port 6379
 ```
 
-Generate POD manifest yaml file with `-o`, don't run it `--dry-run=client`, and save to a file `> nginx-pod.yaml`.
+Generate POD manifest YAML file with `-o`, don't run it `--dry-run=client`, and save to a file `> nginx-pod.yaml`.
 ```bash
 kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yaml
 ```
@@ -78,22 +78,26 @@ kubectl taint nodes node1 size=small:NoSchedule-
 
 ## COMMANDS FOR DEPLOYMENTS
 
+Deployment Strategies: 
+- Recreate
+- Rolling Update(default)
+
 Show deployments
 ```bash
 kubectl get deployments
 ```
 
-Create a deployment using a yaml file (IMPERATIVE)
+Create a deployment using a YAML file (IMPERATIVE)
 ```bash
 kubectl create -f deployment-definition.yaml
 ```
 
-Create a deployment using a yaml file (DECLARATIVE)
+Create a deployment using a YAML file (DECLARATIVE)
 ```bash
 kubectl apply -f deployment-definition.yaml
 ```
 
-Change/set a deployment image
+Change/set a deployment image for a template spec container
 ```bash
 kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1
 ```
@@ -103,7 +107,7 @@ Show the current deployment status of a deployment
 kubectl rollout status deployment/myapp-deployment
 ```
 
-Show the rollout history of a deployment
+Show the rollout history and revisions of a deployment
 ```bash
 kubectl rollout history deployment/myapp-deployment
 ```
@@ -158,7 +162,7 @@ kubectl create service nodeport nginx --tcp=80:80 --node-port=30080
 
 # Metrics Server
 
-:rocket: [metrics-server@github](https://github.com/kubernetes-sigs/metrics-server)
+:dart: [metrics-server@github](https://github.com/kubernetes-sigs/metrics-server)
 
 :dart: [Linux Watch Command](https://linuxize.com/post/linux-watch-command/)
 
@@ -174,6 +178,47 @@ Get PODs CPU and memory utilization
 kubectl top pods
 
 watch "kubectl top pods"
+```
+
+# ConfigMaps
+
+:dart: `cm is the abbreviation to ConfigMap`
+
+Show ConfigMaps configured in the system
+```bash
+kubectl get configmap
+```
+
+Describe a ConfigMap
+```bash
+kubectl describe configmap <NAME>
+
+kubectl get configmap <NAME> -o yaml
+```
+
+Create a new config map named my-config based on folder bar
+```bash
+kubectl create configmap my-config --from-file=path/to/bar
+```
+  
+Create a new config map named my-config with specified keys instead of file basenames on disk
+```bash
+kubectl create configmap my-config --from-file=key1=/path/to/bar/file1.txt --from-file=key2=/path/to/bar/file2.txt
+```
+  
+Create a new config map named my-config with key1=config1 and key2=config2
+```bash
+kubectl create configmap my-config --from-literal=key1=config1 --from-literal=key2=config2
+```
+
+Create a new config map named my-config from the key=value pairs in the file
+```bash
+kubectl create configmap my-config --from-file=path/to/bar
+```
+
+Create a new config map named my-config from an env file
+```bash
+kubectl create configmap my-config --from-env-file=path/to/foo.env --from-env-file=path/to/bar.env
 ```
 
 # OTHERS
