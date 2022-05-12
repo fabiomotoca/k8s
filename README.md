@@ -221,7 +221,43 @@ Create a new config map named my-config from an env file
 kubectl create configmap my-config --from-env-file=path/to/foo.env --from-env-file=path/to/bar.env
 ```
 
+# Secrets
+
+:dart: Use the base64 command to encode the value first in the YAML file - i.e. 
+```bash
+echo "password123" | base64
+```
+
+Create a generic secret with 3 key/value pairs
+```bash
+kubectl create secret generic db-secret --from-literal=DB_Host=sql01 --from-literal=DB_User=root --from-literal=DB_Password=password123
+```
+
+Using the secret in a POD manifest
+```yaml
+apiVersion: v1 
+kind: Pod 
+metadata:
+  labels:
+    name: webapp-pod
+  name: webapp-pod
+  namespace: default 
+spec:
+  containers:
+  - image: kodekloud/simple-webapp-mysql
+    imagePullPolicy: Always
+    name: webapp
+    envFrom:
+    - secretRef:
+        name: db-secret
+```
+
 # OTHERS
+
+Get cluster version
+```bash
+kubectl version --short
+```
 
 List events and sources (Good to see which schedule provisioned a POD for example)
 ```bash
@@ -233,4 +269,44 @@ View scheduler logs
 kubectl logs <POD-NAME>
 
 kubectl logs <SCHEDULER-NAME> --n kube-system
+```
+
+Drain node and its PODs, terminating all PODS and moving to new nodes, also mark the node as unschedulable(SchedulingDisabled)
+```bash
+kubectl drain <NODE>
+```
+
+Mark the node as unschedulable(SchedulingDisabled)
+```bash
+kubectl cordon <NODE>
+```
+
+Remove the mark of unscheduled allowing the node to receive new PODs
+```bash
+kubectl uncordon <NODE>
+```
+
+[Upgrading Kubernetes clusters](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+```bash
+apt upgrade -y kubeadm=<X.XX.X-XX>
+
+kubeadm upgrade plan
+
+apt upgrade -y kubelet=<X.XX.X-XX>
+
+systemctl restart kubelet
+```
+
+Query the kube-apiserver and get all info or [use Velero instead](https://velero.io/).
+```bash
+kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
+```
+
+An example of snapshot of the ectd database
+```bash
+ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+     --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key \
+          snapshot save /opt/snapshot-pre-boot.db
+
+ectdctl snapshot status snapshot.db
 ```
